@@ -1,7 +1,13 @@
 package ru.potatophobe.basedatastructures.array
 
-interface DynamicArray<T> {
+interface DynamicArray<T> : Iterable<T> {
     val size: Int
+
+    val indices get() = 0 until size
+
+    fun isEmpty() = size == 0
+
+    fun notEmpty() = !isEmpty()
 
     fun add(element: T) = add(size, element)
 
@@ -12,6 +18,8 @@ interface DynamicArray<T> {
     fun get(index: Int): T
 
     fun removeAt(index: Int)
+
+    override fun iterator() = DynamicArrayIterator(this)
 
     fun Array<Any?>.moveLeft(startIndex: Int, step: Int) {
         for (i in startIndex..lastIndex) {
@@ -26,4 +34,12 @@ interface DynamicArray<T> {
             set(i, null)
         }
     }
+}
+
+class DynamicArrayIterator<T>(private val dynamicArray: DynamicArray<T>) : Iterator<T> {
+    private var currentIndex = 0
+
+    override fun hasNext() = currentIndex < dynamicArray.size
+
+    override fun next() = dynamicArray.get(currentIndex++)
 }
